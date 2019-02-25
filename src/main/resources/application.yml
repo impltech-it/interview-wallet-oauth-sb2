@@ -1,0 +1,10 @@
+currency:
+  uah:
+    usd: 0.037
+    eur: 0.032
+  usd:
+    uah: 27.28
+    eur: 0.88
+  eur:
+    uah: 30.83
+    usd: 1.13
