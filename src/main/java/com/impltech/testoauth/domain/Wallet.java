@@ -1,7 +1,8 @@
 package com.impltech.testoauth.domain;
 
 import com.impltech.testoauth.enumeration.Currency;
-import lombok.*;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 

@@ -1,7 +1,9 @@
 package com.impltech.testoauth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;

@@ -4,14 +4,18 @@ import com.impltech.testoauth.domain.User;
 import com.impltech.testoauth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by dima.
@@ -24,6 +28,9 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -35,6 +42,7 @@ public class UserService implements UserDetailsService {
      * @return the persisted entity
      */
     public User create(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.debug("Request to save User : {}", user);
         return userRepository.save(user);
     }
@@ -55,10 +63,10 @@ public class UserService implements UserDetailsService {
      * @param id the id of the entity
      * @return the entity
      */
-    public User findOne(Long id) {
+    public Optional<User> findOne(Long id) {
         if (id != null) {
             log.debug("Request to get Users : {}", id);
-            return userRepository.getOne(id);
+            return userRepository.findById(id);
         }
         return null;
     }
@@ -79,7 +87,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException("Invalid username");
         }
         return new org.springframework.security.core.userdetails.User(String.valueOf(user.getId()), user.getPassword(), getAuthority());
     }
